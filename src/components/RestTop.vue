@@ -18,11 +18,11 @@
           <router-link :to="{ name: 'RestsDetail', params: { id: rest.id }}" class="btn btn-primary mr-2">Show
           </router-link>
 
-          <button @click.prevent.stop="removefavorite" v-if="rest.isFavorited" type="button"
+          <button @click.prevent.stop="deletefavorite(rest.id)" v-if="rest.isFavorited" type="button"
             class="btn btn-danger mr-2">
             移除最愛
           </button>
-          <button @click.prevent.stop="addfavorite" v-else type="button" class="btn btn-primary">
+          <button @click.prevent.stop="addfavorite(rest.id)" v-else type="button" class="btn btn-primary">
             加到最愛
           </button>
         </div>
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import restaurantsAPI from './../apis/restaurants'
+import { Toast } from './../utils/helpers'
   export default{
     props:{
       initialrest:{
@@ -45,18 +47,44 @@
       }
     },
     methods: {
-      addfavorite() {
-        this.rest = {
-          ...this.rest,
-          isFavorited: true
+      async addfavorite(restId) {
+        try {
+          const { data } = await restaurantsAPI.addfavorite({ restId })
+
+          if (data.status !== 'success') {
+            throw new Error(data.message)
+          }
+          this.rest = {
+            ...this.rest,
+            isFavorited: true
+          },
+            this.rest.FavoriteCount = this.rest.FavoriteCount + 1
+        } catch (error) {
+          Toast.fire({
+            icon: 'error',
+            title: '無法加入追蹤，請稍後再試'
+          })
         }
       },
-      removefavorite() {
-        this.rest = {
-          ...this.rest,
-          isFavorited: false
+      async deletefavorite(restId) {
+        try {
+          const { data } = await restaurantsAPI.deletefavorite({ restId })
+
+          if (data.status !== 'success') {
+            throw new Error(data.message)
+          }
+          this.rest = {
+            ...this.rest,
+            isFavorited: false
+          },
+            this.rest.FavoriteCount = this.rest.FavoriteCount - 1
+        } catch (error) {
+          Toast.fire({
+            icon: 'error',
+            title: '無法加入追蹤，請稍後再試'
+          })
         }
-      }
+      },
     }
   }
 </script>

@@ -9,29 +9,29 @@
 
       <div class="form-label-group mb-2">
         <label for="name">Name</label>
-        <input v-model="name" id="name" name="name" type="text" class="form-control" placeholder="name" autocomplete="username"
-          required autofocus>
+        <input v-model="name" id="name" name="name" type="text" class="form-control" placeholder="name"
+          autocomplete="username" required autofocus>
       </div>
 
       <div class="form-label-group mb-2">
         <label for="email">Email</label>
-        <input v-model="email" id="email" name="email" type="email" class="form-control" placeholder="email" autocomplete="email"
-          required>
+        <input v-model="email" id="email" name="email" type="email" class="form-control" placeholder="email"
+          autocomplete="email" required>
       </div>
 
       <div class="form-label-group mb-3">
         <label for="password">Password</label>
-        <input v-model="password" id="password" name="password" type="password" class="form-control" placeholder="Password"
-          autocomplete="new-password" required>
+        <input v-model="password" id="password" name="password" type="password" class="form-control"
+          placeholder="Password" autocomplete="new-password" required>
       </div>
 
       <div class="form-label-group mb-3">
         <label for="password-check">Password Check</label>
-        <input v-model="passwordcheck" id="password-check" name="passwordCheck" type="password" class="form-control" placeholder="Password"
-          autocomplete="new-password" required>
+        <input v-model="passwordCheck" id="password-check" name="passwordCheck" type="password" class="form-control"
+          placeholder="Password" autocomplete="new-password" required>
       </div>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+      <button :disabled="isProcessing" class="btn btn-lg btn-primary btn-block mb-3" type="submit">
         Submit
       </button>
 
@@ -51,25 +51,68 @@
 </template>
 
 <script>
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../utils/helpers";
 export default {
   data() {
     return {
-      name: '',
-      email: '',
-      password: '',
-      passwordcheck: ''
-    } 
+      name: "",
+      email: "",
+      password: "",
+      passwordCheck: "",
+      isProcessing: false,
+    };
   },
   methods: {
-    handleSubmit(){
-      const data = JSON.stringify({
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        passwordcheck: this.passwordcheck
-      })
-      console.log('data',data)
-    }
-  }
-}
+    async handleSubmit() {
+      try {
+        if (!this.name) {
+          Toast.fire({
+            icon: "warning",
+            title: "請填寫名稱",
+          });
+          return;
+        }
+        if (!this.email) {
+          Toast.fire({
+            icon: "warning",
+            title: "請填寫email",
+          });
+          return;
+        }
+        if (!this.password || !this.passwordCheck) {
+          Toast.fire({
+            icon: "warning",
+            title: "請填寫密碼",
+          });
+          return;
+        }
+        if (this.password !== this.passwordCheck) {
+          Toast.fire({
+            icon: "warning",
+            title: "兩次密碼輸入不同！",
+          });
+          return;
+        }
+        this.isProcessing = true;
+        const { data } = await authorizationAPI.sighUp({
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          passwordCheck: this.passwordCheck,
+        });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.$router.push("/signin");
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法建立帳號，請稍後再試",
+        });
+        this.isProcessing = false;
+      }
+    },
+  },
+};
 </script>

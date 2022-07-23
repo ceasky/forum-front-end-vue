@@ -16,50 +16,8 @@
 <script>
   import NavTabsVue from "@/components/NavTabs.vue";
   import UsersTopPage from "@/components/UserTopPage.vue";
-
-const dummyData = {
-  "users": [
-    {
-      "id": 1,
-      "name": "root",
-      "email": "root@example.com",
-      "password": "$2a$10$GYrFZ6D8kGx9RdQY3yuMeOOfkR4.61mWRwJY2HZSYwQH6fLNMq3Hm",
-      "isAdmin": true,
-      "image": null,
-      "createdAt": "2022-06-11T04:28:43.000Z",
-      "updatedAt": "2022-06-11T04:28:43.000Z",
-      "Followers": [],
-      "FollowerCount": 0,
-      "isFollowed": false
-    },
-    {
-      "id": 2,
-      "name": "user1",
-      "email": "user1@example.com",
-      "password": "$2a$10$DaiswMDf9MCxlgrCHvpw0u2AJjFGrh2PX/uoKLRKUnASU3hSNwkti",
-      "isAdmin": false,
-      "image": null,
-      "createdAt": "2022-06-11T04:28:43.000Z",
-      "updatedAt": "2022-06-11T04:28:43.000Z",
-      "Followers": [],
-      "FollowerCount": 0,
-      "isFollowed": false
-    },
-    {
-      "id": 3,
-      "name": "user2",
-      "email": "user2@example.com",
-      "password": "$2a$10$FtrLEySvVzYJeZUtmT9Qdu95a8A9sxzFHws3tXIxIhV3NJagftUdy",
-      "isAdmin": false,
-      "image": null,
-      "createdAt": "2022-06-11T04:28:43.000Z",
-      "updatedAt": "2022-06-11T04:28:43.000Z",
-      "Followers": [],
-      "FollowerCount": 0,
-      "isFollowed": false
-    }
-  ]
-}
+import usersAPI from './../apis/users'
+import { Toast } from './../utils/helpers'
 
   export default{
     components:{
@@ -72,12 +30,28 @@ const dummyData = {
       }
     },
     created(){
-      this.fetchUserTop()
+      this.fetchTopUsers()
     },
     methods:{
-      fetchUserTop(){
-        this.users = dummyData.users
-      }
+      async fetchTopUsers() {
+        try {
+          const { data } = await usersAPI.getTopUsers()
+
+          this.users = data.users.map(user => ({
+            id: user.id,
+            name: user.name,
+            image: user.image,
+            followerCount: user.FollowerCount,
+            isFollowed: user.isFollowed
+          }))
+        } catch (error) {
+          console.log(error)
+          Toast.fire({
+            icon: 'error',
+            title: '無法取得美食達人，請稍後再試'
+          })
+        }
+      },
     }
   }
 

@@ -27,7 +27,7 @@
             </li>
           </ul>
           <template v-if="isAdmin">
-            <router-link :to="{ name: 'UserPage', params: { id: user.id } }" class="btn btn-primary">
+            <router-link :to="{ name: 'UserEdit', params: { id: user.id } }" class="btn btn-primary">
               Edit
             </router-link>
           </template>

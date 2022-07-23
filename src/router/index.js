@@ -10,6 +10,11 @@ export default new Router({
   linkExactActiveClass: 'active',
   routes: [
     {
+      path: '/',
+      name: 'root',
+      redirect: '/signin'
+    },
+    {
       path: '/signin',
       name: 'sign-in',
       component: SignIn
@@ -18,6 +23,41 @@ export default new Router({
       path: '/signup',
       name: 'sign-up',
       component: () => import('../views/SignUp.vue')
+    },
+    {
+      path: '/admin',
+      exact: true,
+      redirect: '/admin/restaurants'
+    },
+    {
+      path: '/admin/users',
+      name: 'admin-users',
+      component: () => import('../views/AdminUsers.vue')
+    },
+    {
+      path: '/admin/restaurants',
+      name: 'admin-restaurants',
+      component: () => import('../views/AdminRestaurants.vue')
+    },
+    {
+      path: '/admin/restaurants/new',
+      name: 'admin-restaurant-new',
+      component: () => import('../views/AdminRestaurantNew.vue')
+    },
+    {
+      path: '/admin/restaurants/:id',
+      name: 'admin-restaurant',
+      component: () => import('../views/AdminRestaurant.vue')
+    },
+    {
+      path: '/admin/restaurants/:id/edit',
+      name: 'admin-restaurant-edit',
+      component: () => import('../views/AdminRestaurantEdit.vue')
+    },
+    {
+      path: '/admin/categories',
+      name: 'admin-categories',
+      component: () => import('../views/AdminCategories.vue')
     },
     {
       path: '/RestsHome',
@@ -45,11 +85,6 @@ export default new Router({
       component: () => import('../views/RestDashboard.vue')
     },
     {
-      path: '/',
-      name: 'root',
-      redirect: '/RestsHome'
-    },
-    {
       path: '/Users/Top',
       name: 'UsersTop',
       component: () => import('../views/UsersTop.vue')
@@ -58,6 +93,11 @@ export default new Router({
       path: '/Users/:id',
       name: 'UserPage',
       component: () => import('../views/UserPage.vue')
+    },
+    {
+      path: '/Users/:id/edit',
+      name: 'UserEdit',
+      component: () => import('../views/UserEdit.vue')
     },
     {
       path: '*',
