@@ -14,19 +14,19 @@
           </p>
           <ul class="list-unstyled">
             <li>
-              <strong>{{ user.Comments.length }}</strong> 已評論餐廳
+              <strong>{{ Commentslength || 0 }}</strong> 已評論餐廳
             </li>
             <li>
-              <strong>{{ user.FavoritedRestaurants.length }}</strong> 收藏的餐廳
+              <strong>{{ FavoritedRestaurantslength || 0 }}</strong> 收藏的餐廳
             </li>
             <li>
-              <strong>{{ user.Followers.length }}</strong> followings (追蹤者)
+              <strong>{{ Followingslength || 0 }}</strong> followings (追蹤者)
             </li>
             <li>
-              <strong>{{ user.Followings.length }}</strong> followers (追隨者)
+              <strong>{{ Followerslength || 0 }}</strong> followers (追隨者)
             </li>
           </ul>
-          <template v-if="isAdmin">
+          <template v-if="user.isAdmin">
             <router-link :to="{ name: 'UserEdit', params: { id: user.id } }" class="btn btn-primary">
               Edit
             </router-link>
@@ -49,7 +49,7 @@
 <script>
   export default{
     props:{
-      user:{
+      initaluser:{
         type: Object,
         required: true
       },
@@ -57,15 +57,27 @@
         type: Boolean,
         required: true
       },
-      initialisAdmin: {
-        type: Boolean,
+      Followingslength: {
+        type: Number,
         required: true
-      }
+      },
+      Followerslength: {
+        type: Number,
+        required: true
+      },
+      FavoritedRestaurantslength: {
+        type: Number,
+        required: true
+      },
+      Commentslength: {
+        type: Number,
+        required: true
+      },
     },
     data() {
       return {
         isFollowed: this.initialisFollowed,
-        isAdmin: this.initialisAdmin
+        user: this.initaluser,
       }
     },
     methods: {
@@ -75,6 +87,12 @@
       deleteFollowing() {
         this.isFollowed = false
       }
+    },
+  watch: {
+    initaluser(newValue) {
+      this.user = newValue
     }
+  },
+  
   }
 </script>

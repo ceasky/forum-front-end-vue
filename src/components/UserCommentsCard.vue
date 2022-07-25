@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <strong>{{ user.Comments.length }}</strong> 已評論餐廳
+      <strong>{{ Commentslength }}</strong> 已評論餐廳
     </div>
     <div class="card-body">
       <router-link v-for="comment in user.Comments" :key="comment.id"
@@ -15,10 +15,24 @@
 <script>
   export default{
     props:{
-      user:{
+      initaluser:{
         type: Object,
         required: true
-      }
+      },
+      Commentslength: {
+        type: Number,
+        required: true
+      },
+  },
+  data() {
+    return {
+      user: this.initaluser
+    }
+  }, 
+  watch: {
+    initaluser(newValue) {
+      this.user = newValue
+    }
   },
 }
 </script>

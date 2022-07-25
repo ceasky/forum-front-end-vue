@@ -1,20 +1,23 @@
 <template>
   <div class="container py-5">
     <NavTabsVue />
-    <h1 class="mt-5">
-      最新動態
-    </h1>
-    <hr>
-    <div class="row">
-      <div class="col-md-6">
-        <h3>最新餐廳</h3>
-        <NewsRestsVue :restaurants="restaurants" />
+    <SpinnerVue v-if="isLoading" />
+    <template v-else>
+      <h1 class="mt-5">
+        最新動態
+      </h1>
+      <hr>
+      <div class="row">
+        <div class="col-md-6">
+          <h3>最新餐廳</h3>
+          <NewsRestsVue :restaurants="restaurants" />
+        </div>
+        <div class="col-md-6">
+          <h3>最新評論</h3>
+          <NewsCommentsVue :comments="comments" />
+        </div>
       </div>
-      <div class="col-md-6">
-        <h3>最新評論</h3>
-        <NewsCommentsVue :comments="comments"/>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -24,17 +27,20 @@
   import NewsCommentsVue from "@/components/NewsComments.vue";
 import feedsAPI from "./../apis/Feeds";
 import { Toast } from "./../utils/helpers";
+import SpinnerVue from "@/components/SpinnerVue.vue";
 
   export default{
     components:{
       NavTabsVue, 
       NewsRestsVue,
-      NewsCommentsVue
+      NewsCommentsVue,
+      SpinnerVue
     },
     data (){
       return {
         restaurants:[],
-        comments:[]
+        comments:[],
+        isLoading: true
       }
     },
     created(){
@@ -46,7 +52,9 @@ import { Toast } from "./../utils/helpers";
           const {data} = await feedsAPI.getRestaurants()
           this.restaurants = data.restaurants
           this.comments = data.comments
+          this.isLoading = false
         } catch(error){
+          this.isLoading = false
           console.log("erroe", error);
           Toast.fire({
             icon: "error",

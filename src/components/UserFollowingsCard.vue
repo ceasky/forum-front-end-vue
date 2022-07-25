@@ -1,7 +1,7 @@
 <template>
   <div class="card mb-3">
     <div class="card-header">
-      <strong>{{ user.Followings.length }}</strong> followings (追蹤者)
+      <strong>{{ Followingslength }}</strong> followings (追蹤者)
     </div>
     <div class="card-body">
       <router-link v-for="following in user.Followings" :key="following.id"
@@ -15,10 +15,24 @@
 <script>
   export default{
     props:{
-      user:{
+      initaluser:{
         type: Object,
         required: true
-      }
+      },
+      Followingslength: {
+        type: Number,
+        required: true
+      },
+  },
+  data() {
+    return {
+      user: this.initaluser
+    }
+  }, 
+  watch: {
+    initaluser(newValue) {
+      this.user = newValue
+    }
   },
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <strong>{{ user.FavoritedRestaurants.length }}</strong> 收藏的餐廳
+      <strong>{{ FavoritedRestaurantslength }}</strong> 收藏的餐廳
     </div>
     <div class="card-body">
       <router-link v-for="favoritedRestaurant in user.FavoritedRestaurants" :key="favoritedRestaurant.id"
@@ -15,10 +15,24 @@
 <script>
   export default{
     props:{
-      user:{
+      initaluser:{
         type: Object,
         required: true
-      }
+      },
+      FavoritedRestaurantslength: {
+        type: Number,
+        required: true
+      },
+  },
+  data() {
+    return {
+      user: this.initaluser
+    }
+  }, 
+  watch: {
+    initaluser(newValue) {
+      this.user = newValue
+    }
   },
 }
 </script>

@@ -28,11 +28,11 @@
           <td v-show="user.isAdmin">admin</td>
           <td v-show="!user.isAdmin">user</td>
           <td>
-            <button @click.stop.prevent="toggleIsAdmin(user.id)" v-show="user.isAdmin" type="button"
+            <button @click.stop.prevent="toggleIsAdmin(user.id, user.isAdmin)" v-show="user.isAdmin" type="button"
               class="btn btn-link">
               set as user
             </button>
-            <button @click.stop.prevent="toggleIsAdmin(user.id)" v-show="!user.isAdmin" type="button"
+            <button @click.stop.prevent="toggleIsAdmin(user.id, user.isAdmin)" v-show="!user.isAdmin" type="button"
               class="btn btn-link">
               set as admin
             </button>
@@ -45,34 +45,9 @@
 
 <script>
 import AdminNav from '@/components/AdminNav'
-const dummyData = {
-  users: [
-    {
-      id: 1,
-      email: 'id1@example.com',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    },
-    {
-      id: 2,
-      email: 'id2@example.com',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    },
-    {
-      id: 3,
-      email: 'id3@example.com',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    },
-    {
-      id: 4,
-      email: 'id4@example.com',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    }
-  ]
-}
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+
 export default{
   components: {
     AdminNav
@@ -86,24 +61,46 @@ export default{
     this.fetchusers()
   },
   methods:{
-    fetchusers(){
-      this.users = dummyData.users.map(
-        user=>({
-          ...user,
-          isAdmin:false,
-        })
-      )
+    async fetchusers(){
+      try{
+        const { data } = await adminAPI.adminUsers()
+        this.users = data.users       
+      } catch (error) {
+        console.log("erroe", error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得資料",
+        });
+      }  
     },
-    toggleIsAdmin(userid){
-      this.users = this.users.map(user => {
+    async toggleIsAdmin(userid,isAdmin){
+      try{
+        const beadmin = !isAdmin
+        const { data } = await adminAPI.adminupdate({
+          userid,
+          isAdmin: beadmin.toString()
+        })
+        this.users = this.users.map(user => {
         if (user.id === userid) {
           return {
             ...user,
-            isAdmin: !user.isAdmin,
+            isAdmin: beadmin
           }
         }
         return user
       })
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+      } catch (error) {
+        console.log("erroe", error);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得資料",
+        });
+      } 
+      
     }
   }
 }

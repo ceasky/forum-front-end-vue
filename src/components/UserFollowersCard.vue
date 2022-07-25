@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <strong>{{ user.Followers.length }}</strong> followers (追隨者)
+      <strong>{{ Followerslength }}</strong> followers (追隨者)
     </div>
     <div class="card-body">
       <router-link v-for="follower in user.Followers" :key="follower.id"
@@ -15,10 +15,24 @@
 <script>
   export default{
     props:{
-      user:{
+      initaluser:{
         type: Object,
         required: true
-      }
+      },
+      Followerslength: {
+        type: Number,
+        required: true
+      },
+  },
+  data() {
+    return {
+      user: this.initaluser
+    }
+  }, 
+  watch: {
+    initaluser(newValue) {
+      this.user = newValue
+    }
   },
 }
 </script>

@@ -21,7 +21,7 @@
           <router-link :to="{ name: 'UserPage', params: { id: currentUser.id } }" class="text-white mr-3">
             {{ currentUser.name || '使用者' }} 您好
           </router-link>
-          <button type="button" class="btn btn-sm btn-outline-success my-2 my-sm-0">
+          <button @click="logout" type="button" class="btn btn-sm btn-outline-success my-2 my-sm-0">
             登出
           </button>
         </template>
@@ -30,44 +30,17 @@
   </nav>
 </template>
 <script>
-// ./src/components/Navbar.vue
-// seed data
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: '管理者',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    isAdmin: true
-  },
-  isAuthenticated: true
-}
+import { mapState } from 'vuex'
 
 export default {
-  // Vue 會在沒有資料時使用此預設值
-  data () {
-    return {
-      currentUser: {
-        id: -1,
-        name: '',
-        email: '',
-        image: '',
-        isAdmin: false
-      },
-      isAuthenticated: false
-    }
-  },
-  created() {
-    this.fetchUser()
-  },
+  computed:{
+    ...mapState(['currentUser','isAuthenticated'])
+    },
   methods: {
-    fetchUser() {
-      this.currentUser = {
-        ...this.currentUser,
-        ...dummyUser.currentUser
-      }
-      this.isAuthenticated = dummyUser.isAuthenticated
+    logout() {
+      this.$store.commit('revokeAuthentication')
+      this.$router.push('/signin')
     }
   }
-}
+  }
 </script>

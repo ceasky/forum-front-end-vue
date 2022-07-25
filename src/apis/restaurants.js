@@ -1,26 +1,20 @@
 import { apiHelper } from './../utils/helpers'
-const getToken = () => localStorage.getItem('token')
 
 export default {
+  getRestaurant({ restaurantId }) {
+    return apiHelper.get(`/restaurants/${restaurantId}`)
+  },
   getRestaurants({ page, categoryId }) {
     const searchParams = new URLSearchParams({ page, categoryId })
-    return apiHelper.get(`/restaurants?${searchParams.toString()}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/restaurants?${searchParams.toString()}`)
   },
   getTopRests() {
-    return apiHelper.get('/restaurants/top', {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get('/restaurants/top')
   },
   addfavorite({ restId }) {
-    return apiHelper.post(`/favorite/${restId}`, null, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.post(`/favorite/${restId}`, null)
   },
   deletefavorite({ restId }) {
-    return apiHelper.delete(`/favorite/${restId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.delete(`/favorite/${restId}`)
   },
 }

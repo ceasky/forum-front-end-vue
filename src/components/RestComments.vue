@@ -4,7 +4,7 @@
       所有評論：
     </h2>
 
-    <div v-for="comment in restaurantComments" :key="comment.id">
+    <div v-for="comment in Comments" :key="comment.id">
       <blockquote class="blockquote mb-0">
         <button @click.stop.prevent="handleDeleteButtonClick(comment.id)" v-if="currentUser.isAdmin" type="button"
           class="btn btn-danger float-right">
@@ -28,17 +28,8 @@
 
 <script>
 import { fromNowFilter } from './../utils/mixins'
+import { mapState } from 'vuex'
 
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: '管理者',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    isAdmin: true
-  },
-  isAuthenticated: true
-}
 
 export default {
   mixins: [fromNowFilter],
@@ -48,16 +39,25 @@ export default {
       required: true
     }
   },
+  computed: {
+    ...mapState(['currentUser'])
+  },
   data(){
     return {
-      currentUser: dummyUser.currentUser
+      Comments: this.restaurantComments
     }
   },
   methods: {
     handleDeleteButtonClick(commentId) {
-      console.log('handleDeleteButtonClick', commentId)
       this.$emit('after-delete-comment', commentId)
     }
-  }
+  },
+  watch: {
+    restaurantComments(newValue) {
+      this.Comments = {
+        ...newValue
+      }
+    }
+  },
 }
 </script>

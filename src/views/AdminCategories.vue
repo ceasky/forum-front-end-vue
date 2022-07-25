@@ -66,13 +66,10 @@
 import AdminNav from '@/components/AdminNav'
 import adminAPI from './../apis/admin'
 import { Toast } from './../utils/helpers'
-//  2. 定義暫時使用的資料
-
 export default {
   components: {
     AdminNav
   },
-  // 3. 定義 Vue 中使用的 data 資料
   data() {
     return {
       newCategoryName:"",
@@ -80,7 +77,6 @@ export default {
       isProcessing: false
     }
   },
-  // 5. 調用 `fetchCategories` 方法
   created() {
     this.fetchCategories()
   },

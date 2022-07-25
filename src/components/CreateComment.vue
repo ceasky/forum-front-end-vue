@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid"
 export default {
   props: {
     restid: {
@@ -29,9 +28,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-      console.log('submit')
       this.$emit('after-create-comment', {
-        commentId: uuidv4(),
         restaurantId: this.restid,
         text: this.text
       })

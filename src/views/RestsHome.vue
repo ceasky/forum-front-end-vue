@@ -4,20 +4,14 @@
     <RestsNavPillsVue :categories="categories" />
 
     <div class="row">
-      <RestCardVue
-        v-for="restaurant in restaurants"
-        :key="restaurant.id"
-        :initial-restaurant="restaurant"
-      />
+      <RestCardVue v-for="restaurant in restaurants" :key="restaurant.id" :initial-restaurant="restaurant" />
     </div>
-    <RestPaginationVue
-      v-if="totalPage.length > 1"
-      :current-page="currentPage"
-      :total-page="totalPage"
-      :category-id="categoryId"
-      :previous-page="previousPage"
-      :next-page="nextPage"
-    />
+    <RestPaginationVue v-if="totalPage.length > 1" :current-page="currentPage" :total-page="totalPage"
+      :category-id="categoryId" :previous-page="previousPage" :next-page="nextPage" />
+
+    <div v-if="restaurants.length<1">
+      此類別目前無餐廳資料
+    </div>
   </div>
 </template>
 
